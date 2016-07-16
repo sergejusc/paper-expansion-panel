@@ -100,19 +100,25 @@ Custom property | Description | Default
      * @param {boolean} expanded The panel is expanded.
      */
     toggle: function(exp){
-      // calculate the current height of the overflowing content
-      var contentHeight = window.getComputedStyle(this.$.content,null).
-        getPropertyValue("height");
       var expanded = exp === true ? exp : !this.get('expanded');
       this.set('expanded', expanded);
-      // set the height to the calculated content
-      this.$.wrapper.style.height =
-        this.get('expanded') ? contentHeight : '0px';
+      
+      this.updateHeight();
         
       if (this.expanded)
         this.fire('expanded', {});
       else
         this.fire('contracted', {});
+    },
+    
+    updateHeight: function() {
+      // calculate the current height of the overflowing content
+      var contentHeight = window.getComputedStyle(this.$.content,null).
+        getPropertyValue("height");
+
+      // set the height to the calculated content
+      this.$.wrapper.style.height =
+        this.get('expanded') ? contentHeight : '0px';
     },
 
     _handleTap: function(ev){
