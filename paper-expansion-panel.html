@@ -108,6 +108,11 @@ Custom property | Description | Default
       // set the height to the calculated content
       this.$.wrapper.style.height =
         this.get('expanded') ? contentHeight : '0px';
+        
+      if (this.expanded)
+        this.fire('expanded', {});
+      else
+        this.fire('contracted', {});
     },
 
     _handleTap: function(ev){
