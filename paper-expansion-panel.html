@@ -64,10 +64,13 @@ Custom property | Description | Default
         background: var(--paper-expansion-panel-background-color, #fff);
         margin: 0 24px;
         padding: 16px;
+        
+        cursor: pointer;
+
+        @apply(--panel-collapsed);
       }
       paper-material:hover {
         background: var(--paper-expansion-panel-hover-color, #f4f4f4);
-        cursor: pointer;
       }
 
       /* EXPANSION STATES */
@@ -81,6 +84,10 @@ Custom property | Description | Default
           0 3px 1px -2px rgba(0, 0, 0, 0.2);
         padding: 24px 24px 0px 24px;
         margin: 24px 0;
+
+        cursor: auto;
+
+        @apply(--panel-expanded);
       }
       :host[expanded] iron-icon {
         opacity: 0;
@@ -133,6 +140,8 @@ Custom property | Description | Default
         overflow: hidden;
         opacity: 0;
         height: 0;
+        
+        @apply(--expansion-panel-content);
       }
       .buttons {
         text-align: right;
