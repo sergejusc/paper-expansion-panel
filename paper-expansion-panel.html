@@ -279,14 +279,12 @@ Custom property | Description | Default
     },
 
     _handleTap: function(ev){
-      console.log('_handleTap');
       if (!this.get('expanded') && !ev.target.closest('.button')){
         this.toggle();
       }
     },
     
     _onHeaderTap: function(ev) {
-      console.log('_onHeaderTap');
       if (this.expanded) {
         this.toggle(false);
         event.stopPropagation();
