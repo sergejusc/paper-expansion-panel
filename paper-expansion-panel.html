@@ -89,14 +89,22 @@ Custom property | Description | Default
 
         @apply(--panel-expanded);
       }
-      :host[expanded] iron-icon {
+      
+      :host[expanded] header.keepheader {
+        cursor: pointer;
+        
+        margin: -24px -24px -16px -24px;
+        padding: 24px 24px 16px 24px;
+      }
+      
+      :host[expanded] header.hideheader iron-icon {
         opacity: 0;
       }
       :host[expanded] .expansion-panel-content {
         opacity: 1;
       }
-      :host[expanded] .expansion-panel-value,
-      :host[expanded] .expansion-panel-meta {
+      :host[expanded] header.hideheader .expansion-panel-value,
+      :host[expanded] header.hideheader .expansion-panel-meta {
         opacity: 0;
       }
       :host[expanded] .expansion-panel-meta {
@@ -172,10 +180,10 @@ Custom property | Description | Default
     </style>
     
     <paper-material id="card" on-tap="_handleTap" class='card card--spaced' elevation='0'>
-      <header>
+      <header on-tap="_onHeaderTap" class$="[[_headerClass(keepHeader)]]">
         <span class="expansion-panel-title">{{panelTitle}}<span class="expansion-panel-meta">{{panelMeta}}</span></span>
         <span class="expansion-panel-value">{{panelValue}}</span>
-        <iron-icon icon="expand-more" title="Expand / collapse card contents"></iron-icon>
+        <iron-icon icon="expand-more" title="Expand / collapse card contents" id="icon"></iron-icon>
       </header>
       <div class="expansion-panel-content" id="wrapper">
         <div class="expansion-panel-overflow" id="content">
@@ -209,6 +217,10 @@ Custom property | Description | Default
        */
       panelMeta: String,
 
+      keepHeader: {
+        type: Boolean,
+        value: false
+      },
 
       /**
        * `expanded` defines whether the panel is expanded or collapsed.
@@ -240,6 +252,14 @@ Custom property | Description | Default
 
       this.set('expanded', expanded);
       
+      if (this.keepHeader) {
+        if (expanded) {
+          this.$.icon.set('icon', 'expand-less');
+        } else {
+          this.$.icon.set('icon', 'expand-more');
+        }
+      }
+      
       this.updateHeight();
         
       if (this.expanded)
@@ -259,9 +279,25 @@ Custom property | Description | Default
     },
 
     _handleTap: function(ev){
+      console.log('_handleTap');
       if (!this.get('expanded') && !ev.target.closest('.button')){
         this.toggle();
       }
+    },
+    
+    _onHeaderTap: function(ev) {
+      console.log('_onHeaderTap');
+      if (this.expanded) {
+        this.toggle(false);
+        event.stopPropagation();
+      }
+    },
+    
+    _headerClass: function(keepHeader) {
+      if (keepHeader) 
+        return 'keepheader';
+      else
+        return 'hideheader';
     },
 
   });
