@@ -64,7 +64,7 @@ Custom property | Description | Default
         background: var(--paper-expansion-panel-background-color, #fff);
         margin: 0 24px;
         padding: 16px;
-        
+
         cursor: pointer;
 
         @apply(--panel-collapsed);
@@ -74,10 +74,10 @@ Custom property | Description | Default
       }
 
       /* EXPANSION STATES */
-      :host[expanded] paper-material:hover{
+      .expanded:hover{
         background: var(--paper-expansion-panel-background-color, #fff);
       }
-      :host[expanded] paper-material{
+      .expanded{
         box-shadow:
           0 2px 2px 0 rgba(0, 0, 0, 0.14),
           0 1px 5px 0 rgba(0, 0, 0, 0.12),
@@ -89,28 +89,28 @@ Custom property | Description | Default
 
         @apply(--panel-expanded);
       }
-      
-      :host[expanded] header.keepheader {
+
+      .expanded header.keepheader {
         cursor: pointer;
-        
+
         margin: -24px -24px -16px -24px;
         padding: 24px 24px 16px 24px;
       }
-      
-      :host[expanded] header.hideheader iron-icon {
+
+      .expanded header.hideheader iron-icon {
         opacity: 0;
       }
-      :host[expanded] .expansion-panel-content {
+      .expanded .expansion-panel-content {
         opacity: 1;
       }
-      :host[expanded] header.hideheader .expansion-panel-value,
-      :host[expanded] header.hideheader .expansion-panel-meta {
+      .expanded header.hideheader .expansion-panel-value,
+      .expanded header.hideheader .expansion-panel-meta {
         opacity: 0;
       }
-      :host[expanded] .expansion-panel-meta {
+      .expanded .expansion-panel-meta {
         max-height: 0;
       }
-      :host[expanded] .expansion-panel-title {
+      .expanded .expansion-panel-title {
         text-rendering: geometricPrecision;
         font-weight: bold;
       }
@@ -148,7 +148,7 @@ Custom property | Description | Default
         overflow: hidden;
         opacity: 0;
         height: 0;
-        
+
         @apply(--expansion-panel-content);
       }
       .buttons {
@@ -178,7 +178,7 @@ Custom property | Description | Default
         transition: opacity .15s ease-in-out .15s;
       }
     </style>
-    
+
     <paper-material id="card" on-tap="_handleTap" class='card card--spaced' elevation='0'>
       <header on-tap="_onHeaderTap" class$="[[_headerClass(keepHeader)]]">
         <span class="expansion-panel-title">{{panelTitle}}<span class="expansion-panel-meta">{{panelMeta}}</span></span>
@@ -230,6 +230,7 @@ Custom property | Description | Default
         reflectToAttribute: true,
         value: false,
         notify: true,
+        observer: '_expandedChanged'
       }
 
     },
@@ -251,7 +252,7 @@ Custom property | Description | Default
         expanded = !this.get('expanded');
 
       this.set('expanded', expanded);
-      
+
       if (this.keepHeader) {
         if (expanded) {
           this.$.icon.set('icon', 'expand-less');
@@ -259,15 +260,15 @@ Custom property | Description | Default
           this.$.icon.set('icon', 'expand-more');
         }
       }
-      
+
       this.updateHeight();
-        
+
       if (this.expanded)
         this.fire('expanded', {});
       else
         this.fire('collapsed', {});
     },
-    
+
     updateHeight: function() {
       // calculate the current height of the overflowing content
       var contentHeight = window.getComputedStyle(this.$.content,null).
@@ -283,22 +284,26 @@ Custom property | Description | Default
         this.toggle();
       }
     },
-    
+
     _onHeaderTap: function(ev) {
       if (this.expanded) {
         this.toggle(false);
         event.stopPropagation();
       }
     },
-    
+
     _headerClass: function(keepHeader) {
-      if (keepHeader) 
+      if (keepHeader)
         return 'keepheader';
       else
         return 'hideheader';
     },
 
+    _expandedChanged: function(expanded) {
+      this.toggleClass('expanded', expanded, this.$.card);
+      // this.updateStyles();
+    },
+
   });
 
 </script>
-
